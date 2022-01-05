@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using laserCore.Ilda.Net.Dto;
+using LaserCore.Ilda.Net.Dto;
 
-namespace laserCore.Ilda.Net.FileHelpers
+namespace LaserCore.Ilda.Net.FileHelpers
 {
     public static class IldaParser
     {
-        public static List<PointDto> Parse(FileStream source)
+        public static List<IldaFrame> Parse(Stream source)
         {
             var points = IldaFileReader.Read(source);
             return points;

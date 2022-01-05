@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace laserCore.Ilda.Net.Dto
+namespace LaserCore.Ilda.Net.Dto
 {
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

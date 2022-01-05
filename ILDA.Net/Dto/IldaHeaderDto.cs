@@ -1,4 +1,4 @@
-﻿namespace laserCore.Ilda.Net.Dto
+﻿namespace LaserCore.Ilda.Net.Dto
 {
     public class IldaHeader
     {

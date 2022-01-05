@@ -3,21 +3,24 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using laserCore.Ilda.Net.Dto;
+using LaserCore.Ilda.Net.Dto;
 
-namespace laserCore.Ilda.Net.FileHelpers
+namespace LaserCore.Ilda.Net.FileHelpers
 {
-    public class IldaFileReader
+    internal class IldaFileReader
     {
 
-        public static List<PointDto> Read(Span<byte> buffer)
+        internal static List<IldaFrame> Read(Span<byte> buffer)
         {
 
-            List<PointDto> points = new List<PointDto>();
+            //List<PointDto> points = new List<PointDto>();
+
+            var frames = new List<IldaFrame>();
 
             var byteOffset = 0;
             while (true)
             {
+                var points = new List<PointDto>();
                 var header = buffer.Slice(byteOffset, 32);
                 var currentPoints = 0;
 
@@ -29,7 +32,7 @@ namespace laserCore.Ilda.Net.FileHelpers
                     Name = Encoding.ASCII.GetString(header.Slice(8, 8)),
                     Company = Encoding.ASCII.GetString(header.Slice(16, 8)),
                     RecordCount = BinaryPrimitives.ReadUInt16BigEndian(header.Slice(24, 2)),
-                    FrameNumber = BitConverter.ToUInt16(header.Slice(26, 2)),
+                    FrameNumber = BinaryPrimitives.ReadUInt16BigEndian(header.Slice(26, 2)),//BitConverter.ToUInt16(header.Slice(26, 2)),
                     TotalFrames = BitConverter.ToUInt16(header.Slice(28, 2)),
                     ProjectorNumber = 0,
                     Reserved2 = header.Slice(31, 1).ToArray()[0]
@@ -115,21 +118,26 @@ namespace laserCore.Ilda.Net.FileHelpers
                 {
                     throw new NotImplementedException($"Format Code {head.FormatCode} has not yet been implemented");
                 }
+
+                var frame = new IldaFrame
+                {
+                    Points = points,
+                    FrameNumber = head.FrameNumber
+                };
+                frames.Add(frame);
             }
 
-            return points;
+            return frames;
         }
-        public static List<PointDto> Read(Stream stream)
+
+        public static List<IldaFrame> Read(Stream stream)
         {
 
             byte[] bytes = new byte[stream.Length];
 
             Span<byte> buffer = new Span<byte>(bytes);
             stream.Read(buffer);
-
-
             return Read(buffer);
-
         }
 
         /*
