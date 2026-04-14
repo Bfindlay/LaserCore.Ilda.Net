@@ -1,0 +1,23 @@
+name: Publish NuGet
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - run: dotnet restore ILDA.Net/laserCore.Ilda.Net.csproj
+
+      - run: dotnet build ILDA.Net/laserCore.Ilda.Net.csproj -c Release --no-restore
+
+      - run: dotnet pack ILDA.Net/laserCore.Ilda.Net.csproj -c Release --no-build -o ./nupkg
+
+      - run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
