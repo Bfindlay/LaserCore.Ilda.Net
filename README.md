@@ -1,5 +1,6 @@
 # ILDA.Net
 ![Nuget](https://img.shields.io/nuget/v/LaserCore.Ilda.Net?label=LaserCore.Ilda.Net)
+![NuGet Downloads](https://img.shields.io/nuget/dt/LaserCore.Ilda.Net)
 
 .Net Core native library for reading ILDA Laser show files
 
